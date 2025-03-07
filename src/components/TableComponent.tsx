@@ -10,44 +10,77 @@ import {
   Paper,
   Button,
 } from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
 import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 interface TableComponentProps {
   headers: string[];
-  rows: Record<string, any>[]; // Use Record<string, any> to handle generic row data
+  rows: { [key: string]: any }[];
+  onDragStart?: (event: React.DragEvent<HTMLDivElement>, id: number) => void;
+  onDrop?: (event: React.DragEvent<HTMLTableRowElement>, id: number) => void;
+  isDraggable?: boolean;
   onDelete?: (id: number) => void;
 }
 
-const TableComponent: React.FC<TableComponentProps> = ({ headers, rows, onDelete }) => {
+const TableComponent: React.FC<TableComponentProps> = ({
+  headers,
+  rows,
+  onDragStart,
+  onDrop,
+  isDraggable = false, // Default: No dragging
+  onDelete,
+}) => {
   return (
     <Box p={3}>
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell></TableCell>
+              {isDraggable && <TableCell></TableCell>}{" "}
+              {/* Show drag handle column only if draggable */}
               {headers.map((header, index) => (
-                <TableCell key={index}>{header}</TableCell>
+                <TableCell key={index}>
+                  {header.replace(/\b\w/g, (char) => char.toUpperCase())}{" "}
+                  {/* Capitalize each word */}
+                </TableCell>
               ))}
-              <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {rows.map((row, index) => (
-              <TableRow key={row.id}>
+              <TableRow
+                key={row.id || index} // Ensure unique keys
+                onDragOver={(event) => event.preventDefault()}
+                onDrop={(event) => row.id && onDrop?.(event, row.id)}
+              >
+                {/* Delete Button */}
                 <TableCell>
-                  <DragIndicatorIcon />
+                  <Button
+                    color="error"
+                    startIcon={<DeleteIcon />}
+                    onClick={() => onDelete?.(row.id)}
+                  />
                 </TableCell>
-                <TableCell>{index + 1}</TableCell>
-                {Object.values(row).map((value, idx) =>
-                  idx === 0 ? null : <TableCell key={idx}>{String(value)}</TableCell> // Convert to string
+
+                {/* Drag Handle (Only if draggable) */}
+                {isDraggable && (
+                  <TableCell>
+                    <Box
+                      draggable
+                      onDragStart={(event) =>
+                        row.id && onDragStart?.(event, row.id)
+                      }
+                      sx={{ cursor: "grab", display: "inline-block" }}
+                    >
+                      <DragIndicatorIcon />
+                    </Box>
+                  </TableCell>
                 )}
-                <TableCell>
-                  <Button color="error" startIcon={<DeleteIcon />} onClick={() => onDelete?.(row.id)}>
-                    Delete
-                  </Button>
-                </TableCell>
+
+                {/* Render dynamic row data */}
+                {headers.map((header, colIndex) => (
+                  <TableCell key={colIndex}>{row[header] || "-"}</TableCell>
+                ))}
               </TableRow>
             ))}
           </TableBody>
