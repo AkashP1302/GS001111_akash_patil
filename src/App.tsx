@@ -1,11 +1,10 @@
-
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Layout from "./components/Layout";
-import SKUScreen from "./pages/SKUScreen";
-import StoreScreen from "./pages/StoreScreen";
-import PlanningTable from "./pages/PlanningTable";
-
+import StoreScreen from "./pages/StoreScreens/StoreScreen";
+import PlanningTable from "./pages/PlanningScreen/PlanningTable";
+import SKUScreen from "./pages/SKUScreens/SKUScreen";
+import ChartScreen from "./pages/ChartScreen/ChartScreen";
 
 const App: React.FC = () => {
   return (
@@ -15,6 +14,7 @@ const App: React.FC = () => {
           <Route path="/store" element={<StoreScreen />} />
           <Route path="/sku" element={<SKUScreen />} />
           <Route path="/planning" element={<PlanningTable />} />
+          <Route path="/charts" element={<ChartScreen />} />
         </Routes>
       </Layout>
     </Router>

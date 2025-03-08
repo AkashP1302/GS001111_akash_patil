@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Table,
@@ -8,10 +8,15 @@ import {
   TableHead,
   TableRow,
   Paper,
+  IconButton,
+  TablePagination,
+  Modal,
+  TextField,
   Button,
 } from "@mui/material";
-import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
+import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
 
 interface TableComponentProps {
   headers: string[];
@@ -20,6 +25,7 @@ interface TableComponentProps {
   onDrop?: (event: React.DragEvent<HTMLTableRowElement>, id: number) => void;
   isDraggable?: boolean;
   onDelete?: (id: number) => void;
+  onEdit?: (updatedRow: { [key: string]: any }) => void;
 }
 
 const TableComponent: React.FC<TableComponentProps> = ({
@@ -27,65 +33,180 @@ const TableComponent: React.FC<TableComponentProps> = ({
   rows,
   onDragStart,
   onDrop,
-  isDraggable = false, // Default: No dragging
+  isDraggable = false,
   onDelete,
+  onEdit,
 }) => {
+  const [tableData, setTableData] = useState(rows);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [openModal, setOpenModal] = useState(false);
+  const [selectedRow, setSelectedRow] = useState<{ [key: string]: any } | null>(
+    null
+  );
+
+  useEffect(() => {
+    setTableData(rows);
+  }, [rows]);
+
+  // Handle Page Change
+  const handleChangePage = (_event: unknown, newPage: number) => {
+    setPage(newPage);
+  };
+
+  // Handle Rows per Page Change
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  // Open Modal for Editing
+  const handleEdit = (row: { [key: string]: any }) => {
+    setSelectedRow(row);
+    setOpenModal(true);
+  };
+
+  // Handle Save in Modal
+  // const handleSave = () => {
+  //   setTableData((prevData: any) =>
+  //     prevData.map((item: any) =>
+  //       item.id === selectedRow?.id ? selectedRow : item
+  //     )
+  //   );
+  //   setOpenModal(false);
+  // };
+  const handleSave = () => {
+    if (selectedRow) {
+      const updatedData = tableData.map((item) =>
+        item.id === selectedRow.id ? selectedRow : item
+      );
+
+      setTableData(updatedData); // Update local state
+      onEdit?.(selectedRow); // Notify parent component
+      setOpenModal(false);
+    }
+  };
+
   return (
-    <Box p={3}>
-      <TableContainer component={Paper}>
-        <Table>
+    <Box>
+      <TableContainer component={Paper} sx={{ maxHeight: 400 }}>
+        <Table stickyHeader>
           <TableHead>
             <TableRow>
-              {isDraggable && <TableCell></TableCell>}{" "}
-              {/* Show drag handle column only if draggable */}
+              <TableCell>Actions</TableCell>
               {headers.map((header, index) => (
                 <TableCell key={index}>
-                  {header.replace(/\b\w/g, (char) => char.toUpperCase())}{" "}
-                  {/* Capitalize each word */}
+                  {header.replace(/\b\w/g, (char) => char.toUpperCase())}
                 </TableCell>
               ))}
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map((row, index) => (
-              <TableRow
-                key={row.id || index} // Ensure unique keys
-                onDragOver={(event) => event.preventDefault()}
-                onDrop={(event) => row.id && onDrop?.(event, row.id)}
-              >
-                {/* Delete Button */}
-                <TableCell>
-                  <Button
-                    color="error"
-                    startIcon={<DeleteIcon />}
-                    onClick={() => onDelete?.(row.id)}
-                  />
-                </TableCell>
-
-                {/* Drag Handle (Only if draggable) */}
-                {isDraggable && (
+            {tableData
+              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              .map((row, index) => (
+                <TableRow
+                  key={row.id || index}
+                  onDragOver={(event) => event.preventDefault()}
+                  onDrop={(event) => row.id && onDrop?.(event, row.id)}
+                >
+                  {/* Action Buttons */}
                   <TableCell>
-                    <Box
-                      draggable
-                      onDragStart={(event) =>
-                        row.id && onDragStart?.(event, row.id)
-                      }
-                      sx={{ cursor: "grab", display: "inline-block" }}
+                    <IconButton color="primary" onClick={() => handleEdit(row)}>
+                      <EditIcon />
+                    </IconButton>
+                    <IconButton
+                      color="error"
+                      onClick={() => onDelete?.(row.id)}
                     >
-                      <DragIndicatorIcon />
-                    </Box>
+                      <DeleteIcon />
+                    </IconButton>
+                    {isDraggable && (
+                      <IconButton
+                        draggable
+                        onDragStart={(event: any) =>
+                          row.id && onDragStart?.(event, row.id)
+                        }
+                        sx={{ cursor: "grab", ml: 1 }}
+                      >
+                        <DragIndicatorIcon />
+                      </IconButton>
+                    )}
                   </TableCell>
-                )}
 
-                {/* Render dynamic row data */}
-                {headers.map((header, colIndex) => (
-                  <TableCell key={colIndex}>{row[header] || "-"}</TableCell>
-                ))}
-              </TableRow>
-            ))}
+                  {/* Row Data */}
+                  {headers.map((header, colIndex) => (
+                    <TableCell key={colIndex}>{row[header] || "-"}</TableCell>
+                  ))}
+                </TableRow>
+              ))}
           </TableBody>
         </Table>
       </TableContainer>
+
+      {/* Pagination */}
+      <TablePagination
+        rowsPerPageOptions={[5, 10, 25]}
+        component="div"
+        count={tableData.length}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+      />
+
+      {/* Edit Modal */}
+      <Modal open={openModal} onClose={() => setOpenModal(false)}>
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: 400,
+            bgcolor: "background.paper",
+            boxShadow: 24,
+            p: 4,
+            borderRadius: 2,
+          }}
+        >
+          <h3>Edit Row</h3>
+          {selectedRow && (
+            <>
+              {headers.map((header) => (
+                <TextField
+                  key={header}
+                  label={header}
+                  value={selectedRow[header] || ""}
+                  onChange={(e) =>
+                    setSelectedRow((prev) => ({
+                      ...prev!,
+                      [header]: e.target.value,
+                    }))
+                  }
+                  fullWidth
+                  margin="normal"
+                />
+              ))}
+
+              <Box mt={2} display="flex" justifyContent="flex-end">
+                <Button onClick={() => setOpenModal(false)} color="secondary">
+                  Cancel
+                </Button>
+                <Button
+                  onClick={handleSave}
+                  color="primary"
+                  variant="contained"
+                >
+                  Save
+                </Button>
+              </Box>
+            </>
+          )}
+        </Box>
+      </Modal>
     </Box>
   );
 };

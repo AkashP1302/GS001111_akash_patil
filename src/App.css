@@ -36,3 +36,12 @@
     transform: rotate(360deg);
   }
 }
+.gm-positive {
+  color: green;
+  font-weight: bold;
+}
+
+.gm-negative {
+  color: red;
+  font-weight: bold;
+}
