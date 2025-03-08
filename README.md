@@ -70,8 +70,8 @@ This application provides a user-friendly interface for managing retail planning
 
 1. Clone the repository:
    ```sh
-   git clone https://github.com/your-repo-name.git
-   cd your-repo-name
+   git clone https://github.com/AkashP1302/GS001111_akash_patil
+   cd GS001111_akash_patil
    ```
 2. Install dependencies:
    ```sh
@@ -85,11 +85,3 @@ This application provides a user-friendly interface for managing retail planning
    ```sh
    npm start
    ```
-
-## Contribution
-
-Feel free to fork this project and contribute by submitting pull requests. Make sure to follow the coding guidelines and best practices.
-
-## License
-
-This project is licensed under the MIT License.
