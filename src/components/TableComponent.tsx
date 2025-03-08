@@ -68,23 +68,14 @@ const TableComponent: React.FC<TableComponentProps> = ({
     setOpenModal(true);
   };
 
-  // Handle Save in Modal
-  // const handleSave = () => {
-  //   setTableData((prevData: any) =>
-  //     prevData.map((item: any) =>
-  //       item.id === selectedRow?.id ? selectedRow : item
-  //     )
-  //   );
-  //   setOpenModal(false);
-  // };
   const handleSave = () => {
     if (selectedRow) {
       const updatedData = tableData.map((item) =>
         item.id === selectedRow.id ? selectedRow : item
       );
 
-      setTableData(updatedData); // Update local state
-      onEdit?.(selectedRow); // Notify parent component
+      setTableData(updatedData);
+      onEdit?.(selectedRow);
       setOpenModal(false);
     }
   };
@@ -188,6 +179,10 @@ const TableComponent: React.FC<TableComponentProps> = ({
                   }
                   fullWidth
                   margin="normal"
+                  disabled={
+                    header.toLowerCase() === "id" ||
+                    header.toLowerCase() === "seq_no."
+                  }
                 />
               ))}
 

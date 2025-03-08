@@ -1,0 +1,12 @@
+specVersion: "v1beta"
+serviceId: "gs001111akashpatil"
+location: "us-central1"
+schema:
+  source: "./schema"
+  datasource:
+    postgresql:
+      database: "fdcdb"
+      cloudSql:
+        instanceId: "gs001111akashpatil-fdc"
+      # schemaValidation: "COMPATIBLE"
+connectorDirs: ["./connector"]

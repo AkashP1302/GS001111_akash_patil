@@ -1,46 +1,95 @@
-# Getting Started with Create React App
+# Retail Planning Application
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Overview
 
-## Available Scripts
+This application provides a user-friendly interface for managing retail planning, including store and SKU (Stock Keeping Unit) management. It features an AG-Grid-based planning screen that enables users to analyze and update sales performance data dynamically.
 
-In the project directory, you can run:
+## Features
 
-### `npm start`
+### 1. Navigation
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- **Top Navigation Bar**
+  - Displays the company logo on the left.
+  - Includes Firebase Authentication with sign-in/sign-out functionality on the right.
+- **Left Navigation Menu**
+  - Includes icons and labels for easy access to different screens.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+### 2. Authentication
 
-### `npm test`
+- Firebase Authentication is integrated to manage user login and logout.
+- Users can sign in using their credentials, and authentication status is reflected in the navigation bar.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### 3. Store Management (Store Dimension Screen)
 
-### `npm run build`
+- Allows users to **add, remove, and update** store details.
+- Supports reordering of stores for better organization.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### 4. SKU Management (SKU Dimension Screen)
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- Users can **add, remove, and update** SKUs.
+- Enables editing of **Price** and **Cost** values for each SKU.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### 5. Planning Screen
 
-### `npm run eject`
+- Displays an **AG-Grid** with a cross-join of Stores and SKUs along the rows, and a **Calendar** along the columns.
+- The Calendar groups **Weeks by Months**.
+- Each Week contains the following data columns:
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+  #### Columns:
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+  - **Sales Units**: Editable integer values representing the number of units sold.
+  - **Sales Dollars**: Non-editable, formatted as currency, calculated as:
+    ```
+    Sales Dollars = Sales Units * Price
+    ```
+  - **GM Dollars (Gross Margin Dollars)**: Non-editable, formatted as currency, calculated as:
+    ```
+    GM Dollars = Sales Dollars - (Sales Units * Cost)
+    ```
+  - **GM % (Gross Margin Percentage)**: Non-editable, formatted as percentage, calculated as:
+    ```
+    GM % = (GM Dollars / Sales Dollars) * 100
+    ```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+  #### Conditional Formatting for GM %:
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+  - **Green**: `>= 40%`
+  - **Yellow**: `>= 10% and < 40%`
+  - **Orange**: `> 5% and < 10%`
+  - **Red**: `<= 5%`
 
-## Learn More
+## Technologies Used
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- **React.js** for front-end development
+- **AG-Grid** for data visualization
+- **Material-UI** for UI components
+- **Redux** for state management (if applicable)
+- **Firebase Authentication** for user login and authentication
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Installation & Setup
+
+1. Clone the repository:
+   ```sh
+   git clone https://github.com/your-repo-name.git
+   cd your-repo-name
+   ```
+2. Install dependencies:
+   ```sh
+   npm install
+   ```
+3. Set up Firebase Authentication:
+   - Go to the Firebase Console and create a new project.
+   - Enable Authentication and configure the preferred sign-in methods.
+   - Obtain the Firebase configuration and add it to your project.
+4. Start the application:
+   ```sh
+   npm start
+   ```
+
+## Contribution
+
+Feel free to fork this project and contribute by submitting pull requests. Make sure to follow the coding guidelines and best practices.
+
+## License
+
+This project is licensed under the MIT License.

@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import TableComponent from "../../components/TableComponent";
-import DynamicForm from "../../components/DynamicForm"; // Import DynamicForm
+import DynamicForm from "../../components/DynamicForm";
 import CustomModal from "../../components/CustomModal";
 import { Button } from "@mui/material";
 import { skuFields } from "./skuFields";
 import useExcelData from "../../hooks/useExcelData";
 
 const SKUScreen = () => {
-  const sheetName = "SKUs"; // Change this to the desired sheet
+  const sheetName = "SKUs";
   const excelData = useExcelData("/GSIV25 - Sample Data.xlsx", sheetName);
 
   const [skuData, setSKUData] = useState(excelData);
@@ -16,7 +16,7 @@ const SKUScreen = () => {
 
   useEffect(() => {
     if (excelData.length > 0) {
-      setSKUData(excelData); // Update stores when excelData is available
+      setSKUData(excelData);
     }
   }, [excelData]);
 

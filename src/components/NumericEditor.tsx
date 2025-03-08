@@ -1,53 +1,3 @@
-// import React, { useEffect, useRef, useState } from "react";
-// import { ICellEditorParams } from "ag-grid-community";
-
-// const NumericEditor: React.FC<ICellEditorParams> = (props: any) => {
-//   const [value, setValue] = useState(props.value ?? ""); // Ensure default value
-//   const inputRef = useRef<HTMLInputElement>(null);
-
-//   useEffect(() => {
-//     setTimeout(() => inputRef.current?.focus(), 0); // Auto-focus on mount
-//   }, []);
-
-//   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-//     const newValue = event.target.value;
-//     if (/^\d*\.?\d*$/.test(newValue)) {
-//       setValue(newValue);
-//     }
-//   };
-
-//   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-//     if (event.key === "Enter" || event.key === "Tab") {
-//       props.stopEditing();
-//     }
-//   };
-
-//   // AG Grid calls this method to get the final value
-//   const getValue = () => {
-//     return Number(value) || 0;
-//   };
-
-//   return (
-//     <input
-//       ref={inputRef}
-//       type="text"
-//       value={value}
-//       onChange={handleChange}
-//       onBlur={props?.stopEditing}
-//       onKeyDown={handleKeyDown}
-//       style={{
-//         width: "100%",
-//         height: "100%",
-//         border: "none",
-//         textAlign: "right",
-//         fontSize: "14px",
-//       }}
-//     />
-//   );
-// };
-
-// export default NumericEditor;
-
 import React, { memo, useCallback, useEffect, useRef } from "react";
 
 import type { CustomCellEditorProps } from "ag-grid-react";
@@ -95,10 +45,6 @@ export default memo(
       if (highlightAllOnFocus) {
         eInput.select();
       } else {
-        // when we started editing, we want the caret at the end, not the start.
-        // this comes into play in two scenarios:
-        //   a) when user hits F2
-        //   b) when user hits a printable character
         const length = eInput.value ? eInput.value.length : 0;
         if (length > 0) {
           eInput.setSelectionRange(length, length);
@@ -145,8 +91,6 @@ export default memo(
       }
     };
 
-    // Gets called once before editing starts, to give editor a chance to
-    // cancel the editing before it even starts.
     const isCancelBeforeStart = useCallback(() => {
       return (
         !!eventKey &&
@@ -154,12 +98,7 @@ export default memo(
         "1234567890".indexOf(eventKey) < 0
       );
     }, [eventKey]);
-
-    // Gets called once when editing is finished (eg if Enter is pressed).
-    // If you return true, then the result of the edit will be ignored.
     const isCancelAfterEnd = useCallback(() => {
-      // will reject the number if it greater than 1,000,000
-      // not very practical, but demonstrates the method.
       return value != null && value > 1000000;
     }, [value]);
 

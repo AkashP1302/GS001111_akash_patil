@@ -24,18 +24,17 @@ import {
   BarChart,
 } from "@mui/icons-material";
 import { Link, useLocation } from "react-router-dom";
-import ChartComponent from "./ChartComponent";
 import { companyLogo } from "../assets";
+import { useAuth } from "../context/AuthContext";
 
 const drawerWidth = 240;
 
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const location = useLocation(); // Get current path
-
-  const isAuthenticated = true; // Replace with actual authentication logic
-  const userInfo = { fullname: "John Doe" }; // Replace with real user data
+  const location = useLocation();
+  const { logout } = useAuth();
+  const isAuthenticated = true;
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -43,8 +42,8 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
   const handleLogout = () => {
     setAnchorEl(null);
+    logout();
     console.log("User logged out");
-    // Add logout logic here
   };
 
   const menuItems = [
@@ -56,7 +55,6 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
   const drawerContent = (
     <Box sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
-      {/* Logo Section */}
       <Box
         sx={{
           display: "flex",
@@ -66,14 +64,9 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
           borderBottom: "1px solid #ddd",
         }}
       >
-        <img
-          src={companyLogo}
-          alt="Company Logo"
-          style={{ height: 50 }} // Adjust the height as needed
-        />
+        <img src={companyLogo} alt="Company Logo" style={{ height: 50 }} />
       </Box>
 
-      {/* Menu Items */}
       <List>
         {menuItems.map(({ text, icon, path }) => (
           <ListItem
@@ -83,9 +76,9 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
             onClick={() => setMobileOpen(false)}
             sx={{
               backgroundColor:
-                location.pathname === path ? "#f0f0f0" : "transparent", // Active menu item background
-              "&:hover": { backgroundColor: "#eeede7" }, // Hover effect
-              borderRadius: "4px", // Rounded corners for better look
+                location.pathname === path ? "#f0f0f0" : "transparent",
+              "&:hover": { backgroundColor: "#eeede7" },
+              borderRadius: "4px",
             }}
           >
             <ListItemIcon>{icon}</ListItemIcon>
@@ -100,13 +93,12 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
 
-      {/* Top Navigation Bar */}
       <AppBar
         position="fixed"
         sx={{
           width: { sm: `calc(100% - ${drawerWidth}px)` },
           ml: { sm: `${drawerWidth}px` },
-          bgcolor: "white", // Set background color to white
+          bgcolor: "white",
           color: "black",
           boxShadow: "0px 2px 4px rgba(0,0,0,0.1)",
         }}
@@ -137,12 +129,6 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                 onClick={(e) => setAnchorEl(e.currentTarget)}
               >
                 <AccountCircle />
-                <Typography
-                  variant="h6"
-                  sx={{ fontSize: 14, marginLeft: "8px" }}
-                >
-                  {userInfo.fullname}
-                </Typography>
               </IconButton>
               <Menu
                 anchorEl={anchorEl}
@@ -158,12 +144,10 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         </Toolbar>
       </AppBar>
 
-      {/* Sidebar with Logo and Menu */}
       <Box
         component="nav"
         sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
       >
-        {/* Mobile Drawer */}
         <Drawer
           variant="temporary"
           open={mobileOpen}
@@ -177,7 +161,6 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
           {drawerContent}
         </Drawer>
 
-        {/* Permanent Sidebar */}
         <Drawer
           variant="permanent"
           sx={{
@@ -190,7 +173,6 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         </Drawer>
       </Box>
 
-      {/* Main Content */}
       <Box component="main" sx={{ flexGrow: 1, p: 3, mt: 8 }}>
         {children}
       </Box>
