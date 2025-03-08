@@ -7,7 +7,7 @@ import {
 } from "firebase/auth";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBJXj4rg4gNe5kA72brhvwl1OGC7UogxuM",
+  apiKey: process.env.API_KEY,
   authDomain: "gs001111akashpatil.firebaseapp.com",
   projectId: "gs001111akashpatil",
   storageBucket: "gs001111akashpatil.firebasestorage.app",
