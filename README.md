@@ -1,5 +1,3 @@
-# Retail Planning Application
-
 ## Overview
 
 This application provides a user-friendly interface for managing retail planning, including store and SKU (Stock Keeping Unit) management. It features an AG-Grid-based planning screen that enables users to analyze and update sales performance data dynamically.
@@ -84,3 +82,25 @@ This application provides a user-friendly interface for managing retail planning
    ```sh
    npm start
    ```
+
+## Running & Testing the Code
+
+- Run the application using `npm start`.
+- Navigate through different sections using the side menu.
+- Log in using Firebase Authentication.
+- Test store and SKU management by adding, updating, and deleting entries.
+- Modify planning data in the AG-Grid and observe automatic calculations.
+
+## Elements Done Well
+
+- **AG-Grid Implementation**: Provides an efficient and scalable way to handle large datasets with real-time updates.
+- **Dynamic Calculations**: Sales and GM calculations update automatically, demonstrating proficiency in reactive UI updates.
+- **Conditional Formatting**: Uses color-coded indicators for GM %, enhancing usability and decision-making.
+- **Component-Based Design**: Modularized React components ensure reusability and maintainability.
+
+## Improvements with More Time
+
+1. **Improve UI/UX**: Enhance styling and responsiveness to provide a better user experience.
+2. **Implement Unit Testing**: Add Jest and React Testing Library tests to ensure stability.
+3. **Optimize Performance**: Improve AG-Grid performance by implementing lazy loading and memoization.
+4. **Enhance Error Handling**: Provide more detailed error messages and fallback handling for API failures.
