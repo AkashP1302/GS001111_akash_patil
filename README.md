@@ -63,7 +63,6 @@ This application provides a user-friendly interface for managing retail planning
 - **React.js** for front-end development
 - **AG-Grid** for data visualization
 - **Material-UI** for UI components
-- **Redux** for state management (if applicable)
 - **Firebase Authentication** for user login and authentication
 
 ## Installation & Setup
